@@ -2,9 +2,9 @@ const cheerio = require('cheerio');
 
 export default {
   async fetch(request, env, ctx) {
-    print(request.url)
+    console.log(request.url)
     const {pathname} = new URL(request.url)
-    print(pathname)
+    console.log(pathname)
     const currency = pathname === '/' ? '%E7%BE%8E%E5%85%83' : pathname;
     const data = await getExchangeRate(currency);
     const json = JSON.stringify({data}, null, 2);
