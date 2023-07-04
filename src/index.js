@@ -2,7 +2,9 @@ const cheerio = require('cheerio');
 
 export default {
   async fetch(request, env, ctx) {
-    const data = await getExchangeRate();
+    const {pathname} = new URL(request.url)
+    const currency = pathname === '/' ? '美元' : pathname;
+    const data = await getExchangeRate(currency);
     const json = JSON.stringify({data}, null, 2);
     return new Response(json, {
       headers: {
@@ -12,14 +14,14 @@ export default {
   },
 };
 
-async function getExchangeRate() {
+async function getExchangeRate(currency) {
   const url = 'https://srh.bankofchina.com/search/whpj/search_cn.jsp';
   const response = await fetch(url, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: 'erectDate=&nothing=&pjname=%E7%BE%8E%E5%85%83'
+      body: `erectDate=&nothing=&pjname=${currency}`
   });
   const html = await response.text();
   const $ = cheerio.load(html);
